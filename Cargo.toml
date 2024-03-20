@@ -1,0 +1,39 @@
+[package]
+name = "rsnotifyos"
+version = "0.1.0"
+edition = "2021"
+description = "RSNotifyOS is a library for printing alerts on Linux and Windows operating systems. It uses the D-Bus IPC and Subprocess protocol to communicate with the desktop notification system on Linux. Implements a dialog window system to display alerts on both operating systems."
+authors = ["Frederick Valdez"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/frerd7/rsnotifyos"
+repository = "https://github.com/frerd7/rsnotifyos"
+documentation = "https://docs.rs/rnotify/0.1.0"
+keywords = ["notify", "notification", "dbus-notify", "winalert", "linuxalert"]
+
+[lib]
+name = "rsnotifyos"
+path = "src/lib.rs"
+
+[[bin]]
+name = "message_alert"
+path = "example/msgalert.rs"
+
+[target.'cfg(target_os = "linux")'.dependencies]
+dbus = "0.9.3"
+gtk = "0.9"
+
+[[bin]]
+name = "dbus_notify"
+path = "example/dbusnotify.rs"
+[target.'cfg(target_os = "linux")']
+
+[[bin]]
+name = "notify_alert"
+path = "example/notify_event_loop.rs"
+
+[target.'cfg(target_os = "windows")'.dependencies]
+winapi = { version = "0.3", features = ["winuser","shellapi","errhandlingapi"] }
+
+[features]
+enable_debug = []
