@@ -27,8 +27,10 @@ include!("rsnotify.rs");
 include!("sendcmd.rs");
 include!("linuxalert.rs");
 
-#[cfg(target_os = "windows")]
+#[cfg(target_os = "windows")] 
 include!("winalert.rs"); 
+#[cfg(target_os = "windows")] 
+include!("win32send.rs");
 
 pub struct RNotify<'a> {
    pub title: & 'a str,
@@ -57,7 +59,7 @@ impl <'a>RNotify<'a> {
                     icon: & 'a str, id: & 'a u32, 
                     timeout: & 'a i32) -> RNotify<'a>
      {
-       // call dbus_notify_send
+       // call notification_desktop
        SendDbus::dbus_notify_send(title, app_name, body, icon, id, timeout); 
        RNotify {title, app_name, body, icon
                  , action: "", urgency: "", category: ""
@@ -100,7 +102,17 @@ impl <'a>RNotify<'a> {
                  , action, urgency, category
                  , id: &0, timeout: &0,}
      }
-     
+     // function send_with_wintoast from c++
+     #[cfg(target_os = "windows")]
+     pub fn win32notify(action: & 'a str, app_name: & 'a str, 
+                       title: & 'a str, body: & 'a str, icon: & 'a str,
+                       category: & 'a str, timeout: & 'a i64) -> RNotify <'a>
+     {
+          WinSend::wintoast_send(action, app_name, title, body, icon, category, timeout);
+          RNotify { title: "", app_name: "", body: body
+          , icon: "", action: "", urgency: ""
+          , category: "", id: &0, timeout: &0,}
+     }
      // function menssage dialog
      pub fn alert(mode: & 'a str, body: & 'a str) -> RNotify<'a>
      {
@@ -108,13 +120,10 @@ impl <'a>RNotify<'a> {
 {
          let err = Debug::new();
          // mode window alert 
-         if mode == "INFO" 
-         || mode == "info" {
+         if mode == "INFO" || mode == "info" {
              LinuxAlert::dialog_info(body);
          }
-         else if mode == "Error" 
-              || mode == "err" 
-              || mode == "ERROR" {
+         else if mode == "Error" || mode == "err" || mode == "ERROR" {
              LinuxAlert::dialog_error(body);
          } else { err.error("Invalid message window");}
 }
@@ -129,8 +138,7 @@ impl <'a>RNotify<'a> {
                 || mode == "ERROR" {
              WinAlert::alert_err(body);
          } else { err.error("Invalid message window");}
-}
-               
+}             
         // return instance
         RNotify { title: "", app_name: "", body: body
                  , icon: "", action: "", urgency: ""

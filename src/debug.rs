@@ -24,7 +24,6 @@ struct Debug<'a> {
     msg: &'a [String],
 }
 
-
 // Conditional compilation attribute to enable/disable debug messages
 #[cfg(feature = "enable_debug")]
 macro_rules! debug_println {
@@ -36,6 +35,10 @@ macro_rules! debug_println {
 #[cfg(not(feature = "enable_debug"))]
 macro_rules! debug_println {
     ($($arg:tt)*) => {};
+}
+
+extern "C" {
+    fn is_debug() -> bool;
 }
 
 // Implementation block for Log

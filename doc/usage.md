@@ -20,6 +20,16 @@
          replace: action to exec or not event ""
          replace: category to notify action 
          replace: timeout to numeric senconds notification
+      
+      --------------------------------------------------- 
+       - impl::win32notify("Action", "application name", "app_user_modelid", "body", "image path", "category", timeout); using function notify windows notification
+       ----------------------------------------------------
+         replace: action to exec or not event ""
+         replace: application name to app name
+         replace: notification body to argumment
+         replace: /path/to/file/icon to icon file png
+         replace: category to notify action
+         replace: timeout to numeric senconds notification
          
        - impl::alert("mode", "menssage body"); using alert dialog window os
       -------------------------------------------------------
@@ -50,5 +60,9 @@
      		// sleep    
      		timout(&1000);
      		RNotify::alert("info", "System Info Alert Menssage");
+        
+        timout(&1000);
+        #[cfg(target_os = "windows")]
+          RNotify::win32notify("", "Rust Notify", "App", "Rust Notification from Windows", r"C:\Users\DELL\Downloads\rsnotifyos-main\rsnotifyos-main\example\win32icon.png", "Urgent", &5000);
          } 
         ```
