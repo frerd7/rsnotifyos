@@ -8,7 +8,7 @@ RSNotifyOS is a library for printing alerts on Linux and Windows operating syste
 
 ## Usage
 Functions Use:
- - Print a notification (Windows):
+ - Print a notification (Linux):
     command:
 ```rust
 extern crate rsnotifyos;
